@@ -10,14 +10,6 @@ public
 			CONTROLLER: system Controller;
 			CHAT_ROOM: system Chat_Room;
 			APP_MONITOR: system App_Monitor;
-<<<<<<< HEAD
-			ALGORITHM: system Algorithm.impl;
-			ROUTER: device Router.impl;
-			PLATFORM_ABSTRACTION: system Platform_Abstraction.impl;
-			
-		
-			
-=======
 			ALGORITHM: system Algorithm;
 			ROUTER: device Router;
 			SECURITY: system Security;
@@ -35,7 +27,6 @@ public
 			c8: port VIRTUAL_NC.Control_msg -> CONTROLLER.Control_msg;
 			c9: port PLATFORM_ABSTRACTION.encapsulated_user_input -> UI.User_Input;
 			c10: port UI.UI_Display -> PLATFORM_ABSTRACTION.display;
->>>>>>> refs/remotes/origin/Kevin
 	end Sharing_Router.impl;
 	
 	
@@ -102,8 +93,6 @@ public
 		
 	end App_Monitor;
 	
-<<<<<<< HEAD
-=======
 	system Controller
 		features
 			Chat_msg_in: out event port;
@@ -120,23 +109,17 @@ public
 	
 	
 	
->>>>>>> refs/remotes/origin/Kevin
 	system implementation Algorithm.impl
     end Algorithm.impl;
     
 	system Algorithm
 		features		
-<<<<<<< HEAD
     	allocation_requirement : in data port;
-  		application_type : in data port; 
-  		number_of_users : out data port;
   		bandwidth_allocation_to_user : out data port; 
-=======
     	Allocation_req : in data port;
   		application_type : in data port; 
   		number_of_users : in data port;
   		BW_Alloc_Table : out data port; 
->>>>>>> refs/remotes/origin/Kevin
   		total_bandwidth_utilization : out data port; 
 	end Algorithm;
 	
@@ -149,10 +132,7 @@ public
 		features		
     	packets_from_user_device : in data port;
   		bandwidth_from_ISP : in data port; 
-<<<<<<< HEAD
   		number_of_users : in data port;
-=======
->>>>>>> refs/remotes/origin/Kevin
   		bandwidth_allocation_to_user : out data port; 
   		packets_to_destination_device: out data port;
   		
@@ -161,16 +141,13 @@ public
 	
 	system Security
 		features		
-<<<<<<< HEAD
     	user_authorization : in data port;
   		attacks_identification : in data port; 
   		routing_table : in data port;
   		secure_bandwidth_sharing : out data port; 
-=======
     	packets : in data port;
   		security_rule : in data port; 
   		secure_packets: out data port;
->>>>>>> refs/remotes/origin/Kevin
 	end Security;
 
 	
@@ -181,17 +158,10 @@ public
 		features		
     	user_device_operating_system_platform : in data port;
   		platform_version : in data port;
-<<<<<<< HEAD
   		platform_abstraction_for_version : out data port; 
-	end Platform_Abstraction;
-end main;
-
-
-=======
   		user_input: in event port;
   		display: in data port;
   		encapsulated_user_input: out event port;
   		platform_specific_display: out data port;
-end Platform_Abstraction;
+  	end Platform_Abstraction;
 end main;
->>>>>>> refs/remotes/origin/Kevin
