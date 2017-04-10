@@ -11,7 +11,8 @@ public
 			CHAT_ROOM: system Chat_Room;
 			APP_MONITOR: system App_Monitor;
 			ALGORITHM: system Algorithm;
-			ROUTER: system Router;
+			ROUTER: device Router;
+			SECURITY: system Security;
 			PLATFORM_ABSTRACTION: system Platform_Abstraction;
 		connections
 			c0: port UI.Processed_User_Input -> CONTROLLER.UI_Input;
@@ -19,6 +20,13 @@ public
 			c2: port CONTROLLER.UI_Display_Data -> UI.UI_Display_Data;
 			c3: port CONTROLLER.Allocation_req -> ALGORITHM.Allocation_req;
 			c4: port ALGORITHM.BW_Alloc_Table -> VIRTUAL_NC.BW_Alloc_Table;
+			c5: port CONTROLLER.App_type -> ALGORITHM.application_type;
+			c6: port VIRTUAL_NC.Packet -> SECURITY.packets;
+			c6_1: port SECURITY.secure_packets -> ROUTER.packets_from_user_device;
+			c7: port CONTROLLER.number_of_users -> ALGORITHM.number_of_users;
+			c8: port VIRTUAL_NC.Control_msg -> CONTROLLER.Control_msg;
+			c9: port PLATFORM_ABSTRACTION.encapsulated_user_input -> UI.User_Input;
+			c10: port UI.UI_Display -> PLATFORM_ABSTRACTION.display;
 	end Sharing_Router.impl;
 	
 	
@@ -29,6 +37,7 @@ public
 			App_message: in data port;
 			Packet: out data port;
 			BW_Alloc_Table: in data port;
+			Control_msg: out data port;
 	end Virtual_NetworkCard;
 	
 	device implementation Virtual_NetworkCard.impl
@@ -40,7 +49,7 @@ public
 			User_Input: in event port;
 			UI_Display_Data: in data port;
 			Processed_User_Input: out event port;
-			UI_Display: out event port;
+			UI_Display: out data port;
 	end User_Interface;
 	
 	system implementation User_Interface.impl
@@ -63,14 +72,14 @@ public
 	system Chat_Interface
 		features
 			User_Input: in event port;
+			Chat_Msg_in: out event port;
 			Chat_Msg_out: out event port;
-			
 	end Chat_Interface;
 	
 	system Chat_Room
 		--When users chat, pop up options that conveniently change BW allocation
 		--Exchange chat message between UI's chat interface
-		
+		--Chat Room takes chat message input, and outputs chat message
 		features
 			Chat_msg_in: in event port;
 			Chat_msg_out: out event port;
@@ -93,28 +102,58 @@ public
 			UI_display_data: out data port;
 			--User's requirement about allocation
 			Allocation_req: out data port;
+			App_type: out data port;
+			number_of_users: out data port;
+			Control_msg: in data port;
 	end Controller;
 	
 	
 	
-	system Router
-		
-	end Router;
-	
-	system implementation Router.impl
-		subcomponents
-			SECURITY: system Security;
-	end Router.impl;
-	
-	system Security
-		
-	end Security;
-	
+	system implementation Algorithm.impl
+    end Algorithm.impl;
+    
 	system Algorithm
-		
+		features		
+    	Allocation_req : in data port;
+  		application_type : in data port; 
+  		number_of_users : in data port;
+  		BW_Alloc_Table : out data port; 
+  		total_bandwidth_utilization : out data port; 
 	end Algorithm;
 	
-	system Platform_Abstraction
+	
+	device implementation Router.impl
 		
-	end Platform_Abstraction;
+	end Router.impl;
+	
+	device Router
+		features		
+    	packets_from_user_device : in data port;
+  		bandwidth_from_ISP : in data port; 
+  		bandwidth_allocation_to_user : out data port; 
+  		packets_to_destination_device: out data port;
+  		
+	end Router;
+	
+	
+	system Security
+		features		
+    	packets : in data port;
+  		security_rule : in data port; 
+  		secure_packets: out data port;
+	end Security;
+
+	
+	system implementation Platform_Abstraction.impl
+    end Platform_Abstraction.impl;
+    
+	system Platform_Abstraction
+		features		
+    	user_device_operating_system_platform : in data port;
+  		platform_version : in data port;
+  		user_input: in event port;
+  		display: in data port;
+  		encapsulated_user_input: out event port;
+  		platform_specific_display: out data port;
+end Platform_Abstraction;
 end main;
